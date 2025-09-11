@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Predictor SPA</title>
+    <link rel="stylesheet" href="{% static 'ai_app/style.css' %}">
+</head>
+<body>
+<div id="app">
+    <h1>AI Predictor SPA</h1>
+
+    <section id="auth">
+        <div id="login-box">
+            <h3>Login</h3>
+            <input id="username" placeholder="Username">
+            <input id="password" type="password" placeholder="Password">
+            <button id="btn-login">Login</button>
+            <p class="hint">Demo user sẽ được tạo tự động: <code>user</code> / <code>123456</code></p>
+        </div>
+        <div id="loggedin" style="display:none;">
+            <span id="whoami"></span>
+            <button id="btn-logout">Logout</button>
+        </div>
+    </section>
+
+    <section id="predict" style="display:none;">
+        <h3>Predict</h3>
+        <textarea id="input-data" rows="4" placeholder='Ví dụ: [1, 2, 3] hoặc [[1,2,3],[4,5,6]]'></textarea>
+        <button id="btn-predict">Run</button>
+        <pre id="result"></pre>
+    </section>
+
+    <section id="history" style="display:none;">
+        <h3>History (latest 50)</h3>
+        <table id="history-table">
+            <thead><tr><th>Time</th><th>Input</th><th>Result</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </section>
+</div>
+
+<script src="{% static 'ai_app/main.js' %}"></script>
+</body>
+</html>
