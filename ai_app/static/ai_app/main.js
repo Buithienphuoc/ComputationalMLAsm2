@@ -41,13 +41,14 @@ async function logout() {
 }
 
 async function predict() {
-    let payload;
-    try {
-        payload = JSON.parse($("#input-data").value || "[]");
-    } catch (e) {
-        alert("Input phải là JSON hợp lệ.");
-        return;
-    }
+    // let payload;
+    // try {
+    //     payload = JSON.parse($("#input-data").value || "[]");
+    // } catch (e) {
+    //     alert("Input phải là JSON hợp lệ.");
+    //     return;
+    // }
+    let payload = $("#input-data").value || "";
     const res = await fetch("/api/predict/", {
         method: "POST",
         headers: {

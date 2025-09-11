@@ -1,7 +1,7 @@
 import pandas as pd
 
 class GoalPredictionPipeline:
-    def __init__(self, clf1, clf_cap, reg, features, 
+    def __init__(self, clf1, clf_cap, reg, features,
                  df_players, df_teams, df_train, df_goals_vs_team, threshold=0.3):
         self.clf1 = clf1
         self.clf_cap = clf_cap
@@ -14,49 +14,34 @@ class GoalPredictionPipeline:
         self.threshold = threshold
 
     def build_features(self, player_name, opponent_name, home_team):
-        """
-        Build feature vector from player name, opposing team, and home team.
-        """
-        # Player info
         player_row = self.df_players[self.df_players["name"] == player_name]
         if player_row.empty:
             raise ValueError(f"Player {player_name} not found in player_features.csv")
         player_id = player_row.iloc[0]["player_id"]
         player_team = player_row.iloc[0].get("team_name", None)
 
-        # Player history
         player_hist = self.df_train[self.df_train["player_id"] == player_id].sort_values("fixture_id")
-
-        # Most recent row
         if not player_hist.empty:
             last_row = player_hist.iloc[-1]
             form_goals_lastN = last_row["form_goals_lastN"]
             form_shots_lastN = last_row["form_shots_lastN"]
             form_minutes_lastN = last_row["form_minutes_lastN"]
         else:
-            # Fallback if no history
             form_goals_lastN = form_shots_lastN = form_minutes_lastN = 0
-        
-        # Goals vs this opponent (lookup table)
+
         row_lookup = self.df_goals_vs_team[
             (self.df_goals_vs_team["player_id"] == player_id) &
             (self.df_goals_vs_team["opposing_team"] == opponent_name)
         ]
-        if not row_lookup.empty:
-            goals_vs_team = row_lookup.iloc[0]["goals_vs_this_team"]
-        else:
-            goals_vs_team = 0
+        goals_vs_team = row_lookup.iloc[0]["goals_vs_this_team"] if not row_lookup.empty else 0
 
-        # Team info
         team_row = self.df_teams[self.df_teams["team_name"] == player_team] if player_team else pd.DataFrame()
         opp_row = self.df_teams[self.df_teams["team_name"] == opponent_name]
         if opp_row.empty:
-            raise ValueError(f"Opponent team {opponent_name} not found in team_level_features.csv")
+            raise ValueError(f"Opponent {opponent_name} not found in team_level_features.csv")
 
-        # Home/away indicator
         is_home_match = 1 if player_team == home_team else 0
 
-        # Assemble feature row
         feature_row = pd.DataFrame([{
             "position_encoded": player_row.iloc[0]["position_encoded"],
             "avg_minutes_played": player_row.iloc[0]["avg_minutes_played"],
@@ -75,10 +60,14 @@ class GoalPredictionPipeline:
 
         return feature_row[self.features]
 
-    def predict(self, player_name, opponent_name, home_team):
-        """
-        Predict number of goals for a given player vs opponent, given home team.
-        """
+    def predict(self, X):
+        try:
+            player_name, opponent_name, home_team = [x.strip() for x in X.split(",")]
+        except ValueError:
+            raise ValueError("Input must be 'player_name,opponent_name,home_team'")
+        return self._predict_single(player_name, opponent_name, home_team)
+
+    def _predict_single(self, player_name, opponent_name, home_team):
         X = self.build_features(player_name, opponent_name, home_team)
 
         # Stage 1
