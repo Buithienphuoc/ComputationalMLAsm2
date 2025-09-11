@@ -1,0 +1,10 @@
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+h1 { margin-bottom: 8px; }
+section { margin-top: 20px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
+button { padding: 10px 16px; border: 0; border-radius: 8px; cursor: pointer; }
+button:hover { opacity: 0.9; }
+#history-table { width: 100%; border-collapse: collapse; }
+#history-table th, #history-table td { border: 1px solid #eee; padding: 8px; text-align: left; vertical-align: top; }
+.hint { color: #666; font-size: 0.9em; }
+pre { background: #f7f7f7; padding: 12px; border-radius: 8px; }
