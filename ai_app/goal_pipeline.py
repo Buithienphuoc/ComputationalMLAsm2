@@ -70,16 +70,13 @@ class GoalPredictionPipeline:
     def _predict_single(self, player_name, opponent_name, home_team):
         X = self.build_features(player_name, opponent_name, home_team)
 
-        # Stage 1
         p_scorer = self.clf1.predict_proba(X)[:, 1][0]
         if p_scorer < self.threshold:
             return 0
 
-        # Stage 2
         cap_pred = self.clf_cap.predict(X)[0]
         if cap_pred == 0:
             return 1
 
-        # Stage 3
         reg_pred = self.reg.predict(X)[0]
         return round(reg_pred)

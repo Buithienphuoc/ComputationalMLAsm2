@@ -27,10 +27,20 @@
 
     <section id="predict" style="display:none;">
         <h3>Predict</h3>
-        <textarea id="input-data" rows="4" placeholder='Ví dụ: [1, 2, 3] hoặc [[1,2,3],[4,5,6]]'></textarea>
+
+        <label for="player">Player:</label>
+        <select id="player"></select>
+
+        <label for="opponent">Opposing Team:</label>
+        <select id="opponent"></select>
+
+        <label for="home_team">Home Team:</label>
+        <select id="home_team"></select>
+
         <button id="btn-predict">Run</button>
         <pre id="result"></pre>
     </section>
+
 
     <section id="history" style="display:none;">
         <h3>History (latest 50)</h3>

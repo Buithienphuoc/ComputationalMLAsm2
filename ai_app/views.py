@@ -3,12 +3,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Prediction
+from .models import Prediction, Player, Team
 from .serializers import PredictionSerializer
 from .ml_model import predict
 
+
 def index(request):
     return render(request, "ai_app/index.html")
+
 
 class PredictView(APIView):
     permission_classes = [IsAuthenticated]
@@ -32,3 +34,13 @@ class HistoryView(APIView):
         qs = Prediction.objects.filter(user=request.user).order_by("-created_at")[:50]
         serializer = PredictionSerializer(qs, many=True)
         return Response(serializer.data)
+
+class DropdownDataView(APIView):
+    """Return players and teams for populating dropdown menus."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        players = list(Player.objects.values("id", "name"))
+        teams = list(Team.objects.values("id", "name"))
+        return Response({"players": players, "teams": teams})

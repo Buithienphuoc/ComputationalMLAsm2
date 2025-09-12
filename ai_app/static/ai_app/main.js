@@ -24,6 +24,7 @@ async function login() {
         username = u;
         $("#whoami").textContent = "Logged in as: " + username;
         setLoggedInUI(true);
+        await loadDropdowns();
         await loadHistory();
     } else {
         alert("Login failed");
@@ -36,19 +37,28 @@ async function logout() {
     setLoggedInUI(false);
     $("#whoami").textContent = "";
     $("#result").textContent = "";
-    $("#input-data").value = "";
     $("#history-table tbody").innerHTML = "";
+    $("#player").innerHTML = "";
+    $("#opponent").innerHTML = "";
+    $("#home_team").innerHTML = "";
 }
 
 async function predict() {
-    // let payload;
-    // try {
-    //     payload = JSON.parse($("#input-data").value || "[]");
-    // } catch (e) {
-    //     alert("Input phải là JSON hợp lệ.");
-    //     return;
-    // }
-    let payload = $("#input-data").value || "";
+    const playerId = $("#player").value;
+    const opponentId = $("#opponent").value;
+    const homeTeamId = $("#home_team").value;
+
+    if (!playerId || !opponentId || !homeTeamId) {
+        alert("Please select player, opponent, and home team.");
+        return;
+    }
+
+    const payload = {
+        player_id: playerId,
+        opponent_id: opponentId,
+        home_team_id: homeTeamId
+    };
+
     const res = await fetch("/api/predict/", {
         method: "POST",
         headers: {
@@ -85,6 +95,42 @@ async function loadHistory() {
         tr.appendChild(tdInput);
         tr.appendChild(tdResult);
         tbody.appendChild(tr);
+    });
+}
+
+async function loadDropdowns() {
+    const res = await fetch("/api/dropdown-data/", {
+        headers: { "Authorization": "Bearer " + access }
+    });
+    if (!res.ok) {
+        alert("Failed to load dropdown data");
+        return;
+    }
+    const data = await res.json();
+
+    const playerSelect = $("#player");
+    playerSelect.innerHTML = "";
+    data.players.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.id;
+        option.textContent = p.name;
+        playerSelect.appendChild(option);
+    });
+
+    const opponentSelect = $("#opponent");
+    const homeSelect = $("#home_team");
+    opponentSelect.innerHTML = "";
+    homeSelect.innerHTML = "";
+    data.teams.forEach(t => {
+        const opt1 = document.createElement("option");
+        opt1.value = t.id;
+        opt1.textContent = t.name;
+        opponentSelect.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = t.id;
+        opt2.textContent = t.name;
+        homeSelect.appendChild(opt2);
     });
 }
 
