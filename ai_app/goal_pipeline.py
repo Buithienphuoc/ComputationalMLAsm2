@@ -1,10 +1,9 @@
 import pandas as pd
 
 class GoalPredictionPipeline:
-    def __init__(self, clf1, clf_cap, reg, features,
+    def __init__(self, clf1, reg, features,
                  df_players, df_teams, df_train, df_goals_vs_team, threshold=0.3):
         self.clf1 = clf1
-        self.clf_cap = clf_cap
         self.reg = reg
         self.features = features
         self.df_players = df_players
@@ -60,23 +59,12 @@ class GoalPredictionPipeline:
 
         return feature_row[self.features]
 
-    def predict(self, X):
-        try:
-            player_name, opponent_name, home_team = [x.strip() for x in X.split(",")]
-        except ValueError:
-            raise ValueError("Input must be 'player_name,opponent_name,home_team'")
-        return self._predict_single(player_name, opponent_name, home_team)
-
-    def _predict_single(self, player_name, opponent_name, home_team):
+    def predict(self, player_name, opponent_name, home_team):
         X = self.build_features(player_name, opponent_name, home_team)
 
         p_scorer = self.clf1.predict_proba(X)[:, 1][0]
         if p_scorer < self.threshold:
             return 0
-
-        cap_pred = self.clf_cap.predict(X)[0]
-        if cap_pred == 0:
-            return 1
 
         reg_pred = self.reg.predict(X)[0]
         return round(reg_pred)

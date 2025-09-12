@@ -43,12 +43,9 @@ def predict(data):
     except (Player.DoesNotExist, Team.DoesNotExist) as e:
         raise ValueError(f"Invalid input IDs: {e}")
 
-    # Build the old-style string input
-    input_str = f"{player.name}, {opponent.name}, {home_team.name}"
-
     # Load model and predict
     model = _load_model()
-    result = [model.predict(input_str)]  # wrap in list for single sample
+    result = [model.predict(player.name, opponent.name, home_team.name)]  # wrap in list for single sample
     try:
         return result.tolist()
     except Exception:

@@ -41,6 +41,6 @@ class DropdownDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        players = list(Player.objects.values("id", "name"))
-        teams = list(Team.objects.values("id", "name"))
+        players = list(Player.objects.values("id", "name").order_by("name"))
+        teams = list(Team.objects.values("id", "name").order_by("name"))
         return Response({"players": players, "teams": teams})
