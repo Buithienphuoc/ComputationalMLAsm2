@@ -4,53 +4,101 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI Predictor SPA</title>
+    <title>AI Goal Predictor</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'ai_app/style.css' %}">
+    <style>
+        body.dark-mode {
+            background-color: #121212;
+            color: #f8f9fa;
+        }
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            color: #f8f9fa;
+        }
+        body.dark-mode .table {
+            color: #f8f9fa;
+        }
+    </style>
 </head>
-<body>
-<div id="app">
-    <h1>AI Predictor SPA</h1>
+<body class="bg-light">
 
-    <section id="auth">
-        <div id="login-box">
-            <h3>Login</h3>
-            <input id="username" placeholder="Username">
-            <input id="password" type="password" placeholder="Password">
-            <button id="btn-login">Login</button>
-            <p class="hint">Demo user sẽ được tạo tự động: <code>user</code> / <code>123456</code></p>
-        </div>
-        <div id="loggedin" style="display:none;">
-            <span id="whoami"></span>
-            <button id="btn-logout">Logout</button>
-        </div>
-    </section>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      AI Goal Predictor
+    </a>
+    <button id="toggle-dark" class="btn btn-outline-light btn-sm">🌙 Dark Mode</button>
+  </div>
+</nav>
 
-    <section id="predict" style="display:none;">
-        <h3>Predict</h3>
+<!-- Main Container -->
+<div class="container my-5">
+    <div id="app" class="card shadow p-4">
+        <h1 class="text-center mb-4">⚽ AI Goal Predictor ⚽</h1>
 
-        <label for="player">Player:</label>
-        <select id="player"></select>
+        <!-- Auth Section -->
+        <section id="auth">
+            <div id="login-box" class="mb-4">
+                <h3>Login</h3>
+                <div class="mb-3">
+                    <input id="username" class="form-control" placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <input id="password" type="password" class="form-control" placeholder="Password">
+                </div>
+                <button id="btn-login" class="btn btn-primary w-100 btn-sm">Login</button>
+                <p class="hint mt-2 text-muted small">
+                    Demo user: <code>user</code> / <code>123456</code>
+                </p>
+            </div>
+            <div id="loggedin" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span id="whoami" class="fw-bold"></span>
+                    <button id="btn-logout" class="btn btn-danger btn-sm">Logout</button>
+                </div>
+            </div>
+        </section>
 
-        <label for="opponent">Opposing Team:</label>
-        <select id="opponent"></select>
+        <!-- Predict Section -->
+        <section id="predict" style="display:none;" class="mt-5">
+            <h3>Predict</h3>
+            <div class="mb-3">
+                <label for="player" class="form-label">Player:</label>
+                <select id="player" class="form-select form-select-sm"></select>
+            </div>
+            <div class="mb-3">
+                <label for="opponent" class="form-label">Opposing Team:</label>
+                <select id="opponent" class="form-select form-select-sm"></select>
+            </div>
+            <div class="mb-3">
+                <label for="home_team" class="form-label">Home Team:</label>
+                <select id="home_team" class="form-select form-select-sm"></select>
+            </div>
+            <button id="btn-predict" class="btn btn-success w-100 btn-sm">Run Prediction</button>
+            <pre id="result" class="mt-3 p-3 bg-light border rounded"></pre>
+        </section>
 
-        <label for="home_team">Home Team:</label>
-        <select id="home_team"></select>
-
-        <button id="btn-predict">Run</button>
-        <pre id="result"></pre>
-    </section>
-
-
-    <section id="history" style="display:none;">
-        <h3>History (latest 50)</h3>
-        <table id="history-table">
-            <thead><tr><th>Time</th><th>Input</th><th>Result</th></tr></thead>
-            <tbody></tbody>
-        </table>
-    </section>
+        <!-- History Section -->
+        <section id="history" style="display:none;" class="mt-5">
+            <h3>History (latest 50)</h3>
+            <div class="table-responsive">
+                <table id="history-table" class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr><th>Time</th><th>Input</th><th>Result</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'ai_app/main.js' %}"></script>
+<script src="{% static 'ai_app/darkmode.js' %}"></script>
 </body>
 </html>
