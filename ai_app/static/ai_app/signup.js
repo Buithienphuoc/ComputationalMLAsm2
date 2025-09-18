@@ -1,4 +1,4 @@
-const BASE_URL = window.location.origin;
+// const BASE_URL = window.location.origin;
 
 function getCookie(name) {
     let cookieValue = null;
