@@ -2,6 +2,7 @@ let access = null;
 let username = null;
 
 const $ = (q) => document.querySelector(q);
+const BASE_URL = window.location.origin;  // lấy domain tự động
 
 function setLoggedInUI(on) {
     $("#login-box").style.display = on ? "none" : "block";
@@ -13,7 +14,7 @@ function setLoggedInUI(on) {
 async function login() {
     const u = $("#username").value.trim();
     const p = $("#password").value.trim();
-    const res = await fetch("/api/token/", {
+    const res = await fetch(`${BASE_URL}/api/token/`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({username: u, password: p})
@@ -59,7 +60,7 @@ async function predict() {
         home_team_id: homeTeamId
     };
 
-    const res = await fetch("/api/predict/", {
+    const res = await fetch(`${BASE_URL}/api/predict/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -77,7 +78,7 @@ async function predict() {
 }
 
 async function loadHistory() {
-    const res = await fetch("/api/history/", {
+    const res = await fetch(`${BASE_URL}/api/history/`, {
         headers: { "Authorization": "Bearer " + access }
     });
     const data = await res.json();
@@ -99,7 +100,7 @@ async function loadHistory() {
 }
 
 async function loadDropdowns() {
-    const res = await fetch("/api/dropdown-data/", {
+    const res = await fetch(`${BASE_URL}/api/dropdown-data/`, {
         headers: { "Authorization": "Bearer " + access }
     });
     if (!res.ok) {
