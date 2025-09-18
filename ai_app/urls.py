@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (index, PredictView, HistoryView, DropdownDataView, SignUpView, LoginAPI, logout_api,)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path("", index, name="index"),
