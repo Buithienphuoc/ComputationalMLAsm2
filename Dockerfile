@@ -21,4 +21,4 @@ COPY . .
 # Run migrations + load CSV + start server
 CMD python manage.py migrate && \
     python manage.py import_teams_players && \
-    gunicorn ComputationalMLAsm2.wsgi:application --bind 0.0.0.0:$PORT
+    gunicorn ai_project.wsgi:application --bind 0.0.0.0:$PORT
