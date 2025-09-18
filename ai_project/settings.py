@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -61,6 +62,15 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# 🚀 Nếu có biến DATABASE_URL (khi deploy trên Railway/Heroku) thì override sang Postgres
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600,   # giữ connection lâu hơn để tiết kiệm
+        ssl_require=True    # Railway/Heroku thường cần SSL
+    )
 
 CSRF_TRUSTED_ORIGINS = [
     'https://computationalmlasm2-production.up.railway.app'
