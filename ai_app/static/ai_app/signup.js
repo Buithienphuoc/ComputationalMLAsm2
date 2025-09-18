@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const username = document.getElementById("signup-username").value;
             const email = document.getElementById("signup-email").value;
             const password = document.getElementById("signup-password").value;
+            const password2 = document.getElementById("signup-password2").value;
+            
 
             try {
                 const res = await fetch(`${BASE_URL}/api/signup/`, {
@@ -33,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Content-Type": "application/json", 
                         "X-CSRFToken": csrftoken  // Get CSRF Token
                             },
-                    body: JSON.stringify({ username, email, password })
+                    body: JSON.stringify({ username, email, password, password2 })
                 });
 
                 const data = await res.json();
