@@ -1,3 +1,5 @@
+const BASE_URL = window.location.origin;
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const password = document.getElementById("signup-password").value;
 
             try {
-                const res = await fetch("/signup/", {
+                const res = await fetch(`${BASE_URL}/signup/`, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json", 
