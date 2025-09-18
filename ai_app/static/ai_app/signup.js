@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const password = document.getElementById("signup-password").value;
 
             try {
-                const res = await fetch(`${BASE_URL}/signup/`, {
+                const res = await fetch(`${BASE_URL}/api/signup/`, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json", 
