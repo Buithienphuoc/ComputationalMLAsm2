@@ -6,7 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "dev-secret-key-change-me"
 DEBUG = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    'computationalmlasm2-production.up.railway.app',
+    'localhost',
+    '127.0.0.1'
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,6 +61,9 @@ DATABASES = {
     }
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://computationalmlasm2-production.up.railway.app'
+]
 AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = "en-us"
