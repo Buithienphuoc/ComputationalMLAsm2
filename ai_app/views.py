@@ -14,6 +14,7 @@ from .models import Prediction, Player, Team
 from .serializers import PredictionSerializer, SignUpSerializer
 from .ml_model import predict
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 def index(request):
     return render(request, "ai_app/index.html")
