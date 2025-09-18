@@ -12,7 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const res = await fetch("/signup/", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "X-CSRFToken": csrftoken  // Get CSRF Token
+                            },
                     body: JSON.stringify({ username, email, password })
                 });
 
