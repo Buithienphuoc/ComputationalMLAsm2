@@ -71,6 +71,8 @@ if DATABASE_URL:
         conn_max_age=600   # giữ connection lâu hơn để tiết kiệm 
     )
 
+print(">>> Using DB:", DATABASES["default"])
+
 CSRF_TRUSTED_ORIGINS = [
     'https://computationalmlasm2-production.up.railway.app'
 ]
