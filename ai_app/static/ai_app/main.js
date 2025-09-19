@@ -5,7 +5,9 @@ const $ = (q) => document.querySelector(q);
 const BASE_URL = window.location.origin;  // lấy domain tự động
 
 function setLoggedInUI(on) {
+    // Hide login & signup when logged in
     $("#login-box").style.display = on ? "none" : "block";
+    $("#signup-box").style.display = on ? "none" : "block";
     $("#loggedin").style.display = on ? "block" : "none";
     $("#predict").style.display = on ? "block" : "none";
     $("#history").style.display = on ? "block" : "none";
@@ -60,7 +62,7 @@ async function predict() {
         home_team_id: homeTeamId
     };
 
-    const res = await fetch(`${BASE_URL}/api/predict/`, {
+    const res = await fetch(`${BASE_URL}/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -73,7 +75,30 @@ async function predict() {
         alert("Predict error: " + (data.error || res.statusText));
         return;
     }
-    $("#result").textContent = JSON.stringify(data, null, 2);
+    // Extract values
+    const resultGoals = data.result && data.result.length ? data.result[0] : 0;
+    const playerSelect = $("#player");
+    const opponentSelect = $("#opponent");
+
+    const playerName = playerSelect.options[playerSelect.selectedIndex].text;
+    const opponentName = opponentSelect.options[opponentSelect.selectedIndex].text;
+
+    // // Format output
+    // $("#result").textContent = `${playerName} is predicted to score ${resultGoals} goal against ${opponentName}.`;
+
+    // Format the message with a condition
+    let message;
+    if (resultGoals === 0) {
+        message = `<b>${playerName}</b> is not expected to score against <b>${opponentName}</b>.`;
+    } else if (resultGoals === 1) {
+        message = `<b>${playerName}</b> is predicted to score <b>1</b> goal against <b>${opponentName}</b>.`;
+    } else {
+        message = `<b>${playerName}</b> is predicted to score <b>${resultGoals}</b> goals against <b>${opponentName}</b>.`;
+    }
+
+    // Show formatted output
+    $("#result").innerHTML  = message;
+
     await loadHistory();
 }
 
@@ -84,20 +109,37 @@ async function loadHistory() {
     const data = await res.json();
     const tbody = $("#history-table tbody");
     tbody.innerHTML = "";
+
     (data || []).forEach(row => {
         const tr = document.createElement("tr");
+
+        // Time
         const tdTime = document.createElement("td");
         tdTime.textContent = new Date(row.created_at).toLocaleString();
-        const tdInput = document.createElement("td");
-        tdInput.textContent = JSON.stringify(row.input_data);
-        const tdResult = document.createElement("td");
-        tdResult.textContent = JSON.stringify(row.result);
         tr.appendChild(tdTime);
+
+        // Input
+        const tdInput = document.createElement("td");
+        const input = row.input_data || {};
+        const playerName = playersMap[input.player_id] || `Player#${input.player_id}`;
+        const opponentName = teamsMap[input.opponent_id] || `Team#${input.opponent_id}`;
+        const homeName = teamsMap[input.home_team_id] || `Team#${input.home_team_id}`;
+        tdInput.textContent = `${playerName} vs ${opponentName} (Home: ${homeName})`;
         tr.appendChild(tdInput);
+
+        // Result (pretty)
+        const tdResult = document.createElement("td");
+        const goals = row.result && row.result.length ? row.result[0] : 0;
+        tdResult.textContent = `${goals} goal${goals === 1 ? "" : "s"}`;
         tr.appendChild(tdResult);
+
         tbody.appendChild(tr);
     });
 }
+
+
+let playersMap = {};
+let teamsMap = {};
 
 async function loadDropdowns() {
     const res = await fetch(`${BASE_URL}/api/dropdown-data/`, {
@@ -109,6 +151,9 @@ async function loadDropdowns() {
     }
     const data = await res.json();
 
+    playersMap = {};
+    teamsMap = {};
+
     const playerSelect = $("#player");
     playerSelect.innerHTML = "";
     data.players.forEach(p => {
@@ -116,6 +161,9 @@ async function loadDropdowns() {
         option.value = p.id;
         option.textContent = p.name;
         playerSelect.appendChild(option);
+
+        // store lookup
+        playersMap[p.id] = p.name;
     });
 
     const opponentSelect = $("#opponent");
@@ -132,8 +180,12 @@ async function loadDropdowns() {
         opt2.value = t.id;
         opt2.textContent = t.name;
         homeSelect.appendChild(opt2);
+
+        // store lookup
+        teamsMap[t.id] = t.name;
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     $("#btn-login").addEventListener("click", login);
