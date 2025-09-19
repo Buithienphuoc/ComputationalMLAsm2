@@ -3,6 +3,10 @@ from pathlib import Path
 from .models import Player, Team
 from .goal_pipeline import GoalPredictionPipeline
 
+# Trick: ánh xạ __main__.GoalPredictionPipeline về đúng class trong goal_pipeline
+sys.modules["__main__"] = sys.modules[__name__]
+sys.modules["__main__"].GoalPredictionPipeline = GoalPredictionPipeline
+
 MODEL_PATH = Path(__file__).resolve().parent / "goal_prediction_pipeline.pkl"
 _model = None
 
