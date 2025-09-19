@@ -2,6 +2,7 @@ import joblib
 from pathlib import Path
 from .models import Player, Team
 from .goal_pipeline import GoalPredictionPipeline
+import sys
 
 # Trick: ánh xạ __main__.GoalPredictionPipeline về đúng class trong goal_pipeline
 sys.modules["__main__"] = sys.modules[__name__]
