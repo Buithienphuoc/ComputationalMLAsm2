@@ -68,8 +68,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
     DATABASES["default"] = dj_database_url.parse(
         DATABASE_URL,
-        conn_max_age=600,   # giữ connection lâu hơn để tiết kiệm
-        ssl_require=True    # Railway/Heroku thường cần SSL
+        conn_max_age=600   # giữ connection lâu hơn để tiết kiệm 
     )
 
 CSRF_TRUSTED_ORIGINS = [
