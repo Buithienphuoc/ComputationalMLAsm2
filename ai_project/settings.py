@@ -56,21 +56,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ai_project.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # 🚀 Nếu có biến DATABASE_URL (khi deploy trên Railway/Heroku) thì override sang Postgres
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
-    DATABASES["default"] = dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=600   # giữ connection lâu hơn để tiết kiệm 
-    )
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',                      
+        'USER': 'postgres',
+        'PASSWORD': 'DMsofpbTvPRorfplZLfnRyycSWXeKwHR',
+        'HOST': 'postgres.railway.internal',
+        'PORT': '5432',
+    }
+}
 print(">>> Using DB:", DATABASES["default"])
 
 CSRF_TRUSTED_ORIGINS = [
