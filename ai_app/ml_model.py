@@ -1,7 +1,7 @@
 import joblib
 from pathlib import Path
 from .models import Player, Team
-from goal_pipeline import GoalPredictionPipeline
+from .goal_pipeline import GoalPredictionPipeline
 
 MODEL_PATH = Path(__file__).resolve().parent / "goal_prediction_pipeline.pkl"
 _model = None
