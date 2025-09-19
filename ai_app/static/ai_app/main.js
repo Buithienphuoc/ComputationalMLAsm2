@@ -62,7 +62,7 @@ async function predict() {
         home_team_id: homeTeamId
     };
 
-    const res = await fetch(`${BASE_URL}/`, {
+    const res = await fetch(`${BASE_URL}/api/predict/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
